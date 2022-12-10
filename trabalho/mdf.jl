@@ -2,6 +2,7 @@ using Plots
 using JSON
 
 function main()
+    println(".MDF")
     #entrada de dados MDF
     conect = [
            0     0    5     2

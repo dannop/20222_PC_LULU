@@ -55,17 +55,11 @@ class MyCanvas(QtOpenGL.QGLWidget):
         glLoadIdentity()
 
     def paintGL(self):
-        # clear the buffer with the current clear color
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # draw a triangle with RGB color at the 3 vertices
-        # interpolating smoothly the color in the interior
         glCallList(self.list)
         glDeleteLists(self.list, 1)
         self.list = glGenLists(1)
         glNewList(self.list, GL_COMPILE)
-        # Display model polygon RGB color at its vertices
-        # interpolating smoothly the color in the interior
-        #glShadeModel(GL_SMOOTH)
         pt0_U = self.convertPtCoordsToUniverse(self.m_pt0)
         pt1_U = self.convertPtCoordsToUniverse(self.m_pt1)
         glColor3f(1.0, 0.0, 0.0)
@@ -124,15 +118,11 @@ class MyCanvas(QtOpenGL.QGLWidget):
         self.pointGrid(self.space)
 
     def scaleWorldWindow(self,_scaleFac):
-        # Compute canvas viewport distortion ratio.
         vpr = self.m_h / self.m_w
-        # Get current window center.
         cx = (self.m_L + self.m_R) / 2.0
         cy = (self.m_B + self.m_T) / 2.0
-        # Set new window sizes based on scaling factor.
         sizex = (self.m_R - self.m_L) * _scaleFac
         sizey = (self.m_T - self.m_B) * _scaleFac
-        # Adjust window to keep the same aspect ratio of the viewport.
         if sizey > (vpr*sizex):
             sizex = sizey / vpr
         else:
@@ -141,23 +131,17 @@ class MyCanvas(QtOpenGL.QGLWidget):
         self.m_R = cx + (sizex * 0.5)
         self.m_B = cy - (sizey * 0.5)
         self.m_T = cy + (sizey * 0.5)
-        # Establish the clipping volume by setting up an
-        # orthographic projection
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         glOrtho(self.m_L, self.m_R, self.m_B, self.m_T, -1.0, 1.0)
 
     def panWorldWindow(self, _panFacX, _panFacY):
-        # Compute pan distances in horizontal and vertical directions.
         panX = (self.m_R - self.m_L) * _panFacX
         panY = (self.m_T - self.m_B) * _panFacY
-        # Shift current window.
         self.m_L += panX
         self.m_R += panX
         self.m_B += panY
         self.m_T += panY
-        # Establish the clipping volume by setting up an
-        # orthographic projection
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         glOrtho(self.m_L, self.m_R, self.m_B, self.m_T, -1.0, 1.0)

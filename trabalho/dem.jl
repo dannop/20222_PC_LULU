@@ -36,8 +36,9 @@ end
 
 function main(_file::String)
     println(".DEM")
-    # read input file
+    # numero de passos
     N = 600
+    # tamanho do passo
     h = 0.00004
     ne, x0, y0 = readJSON(_file)
     ndofs = 2*ne
@@ -111,18 +112,19 @@ function main(_file::String)
     #@show F
     #@show restrs
 
-    u = zeros(Float64,ndofs,1)
-    v = zeros(Float64,ndofs,1)
-    a = zeros(Float64,ndofs,1)
+    u = zeros(Float64,ndofs,1) # deslocamento
+    v = zeros(Float64,ndofs,1) # velocidade
+    a = zeros(Float64,ndofs,1) # acaleração
     res = zeros(Float64,N)
 
-    fi = zeros(Float64,ndofs,1)
+    fi = zeros(Float64,ndofs,1) # forças internas
     #@show fi
-    a .= (F .- fi)./mass    
+    a .= (F .- fi)./mass 
+    # método de leapfrog
     for i = 1:N
         v .+= a .* (0.5*h)
         u .+= v .* h
-        # contato
+        # algoritmo contato
         fi .= 0.0
         for j = 1:ne
             if (restrs[2*j-1] == 1)
@@ -155,7 +157,10 @@ function main(_file::String)
     outputRes(res)
     #@show res
     x = 1:N
-    plot(x,res)
+
+    #println("plot")
+    #plot!(x,res, show=true)
+    #readline()
 end
 
 if length(ARGS) == 1

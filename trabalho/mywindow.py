@@ -5,15 +5,20 @@ from mymodel import *
 class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
+        # define tamanho da janela
         self.setGeometry(100,100,600,400)
-        self.setWindowTitle("MyGLDrawer")
+        # define titulo da janela
+        self.setWindowTitle("Luiza Drawer")
+        # cria um objeto canvas que é um widget
         self.canvas = MyCanvas()
+        # seta esse canvas para ser o widget central da janela
         self.setCentralWidget(self.canvas)
-        # create a model object and pass to canvas
+        # cria um objeto modelo e passa para o canvas
         self.model = MyModel()
         self.canvas.setModel(self.model)
-        # create a Toolbar
+        # cria a barra de ferramentas
         tb = self.addToolBar("File")
+        # cria os botoes de fit e grade
         fit = QAction(QIcon("icons/fit.png"),"fit",self)
         grade = QAction(QIcon("icons/grade.png"),"grade",self)
         tb.addAction(fit)
@@ -21,9 +26,13 @@ class MyWindow(QMainWindow):
         tb.actionTriggered[QAction].connect(self.tbpressed)
 
     def tbpressed(self,a):
+        # checa se o botão pressionado foi o fit
         if a.text() == "fit":
             self.canvas.fitWorldToViewport()
+
+        # checa se o botão pressionado foi o grade
         if a.text() == "grade":
-            espacamento, valid = QInputDialog.getInt(self, 'Espaçamento da grade', 'Informe o espaçamento entre os pontos da grade:')
+            # abre um diálogo para inserir a informação do espaço entre os pontos
+            espaco, valid = QInputDialog.getInt(self, 'Grade de Pontos', 'Digite o espaço entre os pontos da grade:')
             if valid:
-                self.canvas.pointGrid(int(espacamento))
+                self.canvas.pointGrid(int(espaco))

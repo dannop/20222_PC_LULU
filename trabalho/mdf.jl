@@ -21,8 +21,8 @@ function main()
           14    11    0    16
           15    12    0     0 ]
 
-    nn = 16
-    println(nn)
+    nn, mm = size(conect)
+
     cc = [
         1  100
         1   75
@@ -41,23 +41,25 @@ function main()
         1   25
         1    0 ]
 
-    #resolução MDF
     A = zeros(nn, nn)
     b = zeros(nn, 1)
     
     bloco = [1, 1, 1, 1]
+
     for e = 1:nn
-        if (cc[e,1]==0)
+        if (cc[e,1] == 0)
             A[e,e] = -4
             for j = 1:4
-                A[e, conect[e,j]-1] = bloco[j]
+                A[e, conect[e,j]] = bloco[j]
             end
         else
-            A[e,e] = 1
-            b[e,1] = cc[e,1]
+            A[e, e] = 1
+            b[e, 1] = cc[e, 2]
         end
     end
-    x = b\A
+
+    x = A\b
+
     AA = [-4   1   1   0
            1  -4   0   1
            1   0  -4   1
@@ -68,11 +70,12 @@ function main()
           -175
            -75]
 
-    xx = bb\AA
+    xx = AA\bb
+    
+    println("x")
     println(x)
+    println("xx")
     println(xx)
 end
-
-
 
 main()

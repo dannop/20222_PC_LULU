@@ -129,10 +129,7 @@ function main(_file::String)
             xj = x0[j] + u[2*j-1]
             yj = y0[j] + u[2*j]
             for index = 1:conect[j,1]
-                println("Novo INDEX")
-                println(index)
                 k = conect[j,index+1]
-                println(k)     
                 xk = x0[k] + u[2*k-1]
                 yk = y0[k] + u[2*k]
                 dX = xj-xk

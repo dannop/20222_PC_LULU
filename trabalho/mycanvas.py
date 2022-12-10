@@ -89,7 +89,6 @@ class MyCanvas(QtOpenGL.QGLWidget):
             glEnd()
         glEndList()
         if not(self.m_hmodel.isEmpty()):
-            print("teste")
             patches = self.m_hmodel.getPatches()
             for pat in patches:
                 pts = pat.getPoints()

@@ -7,12 +7,19 @@ function readJSON(_file::String)
     open(_file,"r") do f
         data = JSON.parse(f)
         if haskey(data,"points")
-            ne = size(data["points"])[1]
+            ne = 18
+            neReal = size(data["points"])[1]
             x0 = Array{Float64}(undef,ne,1)
             y0 = Array{Float64}(undef,ne,1)
+            println(neReal)
             for i=1:ne
-                x0[i] = convert(Float64,data["points"][i][1])
-                y0[i] = convert(Float64,data["points"][i][2])
+                if (i <= neReal)
+                    x0[i] = convert(Float64,data["points"][i][1])
+                    y0[i] = convert(Float64,data["points"][i][2])
+                else
+                    x0[i] = 0.0
+                    x0[i] = 0.0
+                end
             end
         end
         return ne,x0,y0
@@ -56,19 +63,47 @@ function main(_file::String)
         2   17   13    0    0
         3   16   18   14    0
         2   17   15    0    0    ]
- 
-    F = zeros(Float64, ne, 2)
-    restrs = zeros(Int8, ne, 2)
-    F[1] = -1000.0
-    restrs[1] = 1
-    restrs[2] = 1
-    restrs[3] = 1
-    # restrs[ne/2] = 1
-    # restrs[ne/2+1] = 1
-    # restrs[ne/2+2] = 1
+    F = [
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     0.00000     0.00000
+     -1000.0     0.00000
+     -1000.0     0.00000
+     -1000.0     0.00000]
+    restrs = [
+        1   1
+        1   1
+        1   1
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0
+        0   0]
     F = reshape(transpose(F),(ndofs,1))
     restrs = reshape(transpose(restrs),(ndofs,1))
-    println("aaaa")
+        
     @show ne
     #@show x0
     #@show y0
@@ -85,13 +120,11 @@ function main(_file::String)
     #@show fi
     a .= (F .- fi)./mass    
     for i = 1:N
-        println("Novo I")
         v .+= a .* (0.5*h)
         u .+= v .* h
         # contato
         fi .= 0.0
         for j = 1:ne
-            println("Novo J")
             if (restrs[2*j-1] == 1)
                 u[2*j-1] = 0.0
             end
@@ -101,10 +134,7 @@ function main(_file::String)
             xj = x0[j] + u[2*j-1]
             yj = y0[j] + u[2*j]
             for index = 1:conect[j,1]
-                println("Novo INDEX")
-                println(index)
-                k = conect[j,index+1]   
-                println(k)            
+                k = conect[j,index+1]
                 xk = x0[k] + u[2*k-1]
                 yk = y0[k] + u[2*k]
                 dX = xj-xk
@@ -131,3 +161,4 @@ end
 if length(ARGS) == 1
     main(ARGS[1])
 end
+

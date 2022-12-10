@@ -81,6 +81,7 @@ function main(_file::String)
             A[e,e] = 1
             b[e,0] = cc[e,1]
         end
+    end
     x = b\A
     AA = [-4   1   1   0
            1  -4   0   1
@@ -93,6 +94,8 @@ function main(_file::String)
            -75]
 
     xx = bb\AA
+    println(x)
+    println(xx)
 end
 
 
